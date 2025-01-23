@@ -1,22 +1,21 @@
-from typing import Union
-
 import asyncpg
-
+from typing import Union
 from asyncpg import Connection
 from asyncpg.pool import Pool
-
+from data import config
 
 
 class Database:
-    def __init__(self):
+    def __init__(self, name):
         self.pool: Union[Pool, None] = None
+        self.db_name = name
 
     async def create(self):
         self.pool = await asyncpg.create_pool(
-            user='postgres',
-            password='1111',
-            host='localhost',
-            database='ecommerce',
+            user=config.DB_NAME,
+            password=config.DB_PASSWORD,
+            host=config.DB_HOST,
+            database=config.DB_DATABASE,
         )
 
     async def execute(
@@ -41,18 +40,28 @@ class Database:
                     result = await connection.execute(command, *args)
             return result
 
-
     @staticmethod
     def format_args(sql, parameters: dict):
         sql += " AND ".join(
             [f"{item} = ${num}" for num, item in enumerate(parameters.keys(), start=1)]
         )
         return sql, tuple(parameters.values())
-    
+
     async def get_products(self):
-        sql = "SELECT * FROM products;"
+        sql = f"SELECT * FROM {self.db_name};"
         return await self.execute(sql, fetch=True)
-    
-    async def add_product(self, name, description, address, price, summary, product_count):
-        sql = "INSERT INTO products (name, description, address, price, summary, product_count) VALUES($1, $2, $3, $4, $5, $6) returning *"
-        return await self.execute(sql, name, description, address, price, summary, product_count, fetchrow=True)
+
+    async def add_product(
+        self, name, description, address, price, summary, product_count
+    ):
+        sql = f"INSERT INTO {self.db_name} (name, description, address, price, summary, product_count) VALUES($1, $2, $3, $4, $5, $6) returning *"
+        return await self.execute(
+            sql,
+            name,
+            description,
+            address,
+            price,
+            summary,
+            product_count,
+            fetchrow=True,
+        )
