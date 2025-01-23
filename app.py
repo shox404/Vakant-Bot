@@ -6,7 +6,6 @@ from loader import dp, bot
 async def start():
     try:
         await dp.start_polling(bot)
-        print('Hello')
     finally:
         await bot.session.close()
 
