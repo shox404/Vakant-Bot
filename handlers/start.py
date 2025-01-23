@@ -23,5 +23,5 @@ async def add_user(message: Message):
         else:
            await message.answer(f"Good evening. Welcome to the bot ADMIN <b>{message.from_user.full_name}</b>! ")
     else:
-       
+        
         await message.answer(f"Hello, Welcome to the bot <b>{message.from_user.full_name}</b>!")
