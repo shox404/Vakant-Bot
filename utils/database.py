@@ -12,10 +12,10 @@ class Database:
 
     async def create(self):
         self.pool = await asyncpg.create_pool(
-            user="postgres",
-            password="4048080404",
-            host="localhost",
-            database="vakant",
+            user=config.DB_NAME,
+            password=config.DB_PASSWORD,
+            host=config.DB_HOST,
+            database=config.DB_DATABASE,
         )
 
     async def execute(
