@@ -1,5 +1,5 @@
 from aiogram import types
-from aiogram.dispatcher.filters.builtin import Command
+from aiogram.filters import Command
 from aiogram.dispatcher import FSMContext 
 from states.users import User
 from loader import dp
@@ -30,7 +30,7 @@ async def get_user_age(message: types.Message,state:FSMContext):
 
 
 @dp.message_handler(state=User.age)   
-async def ovqat_func(message: types.Message,state:FSMContext):
+async def get_personal_data(message: types.Message,state:FSMContext):
     await state.update_data(
         {"Age" : message.text}
         )   
