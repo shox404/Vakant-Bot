@@ -11,7 +11,7 @@ async def send_vacancy_list(message: types.Message):
     # Start text
     start_text = f"Список вакансий:"
     
-    # Create the keyboard
+    
     keyboard = InlineKeyboardMarkup(row_width=1)
     for item in generals:
         keyboard.add(

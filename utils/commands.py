@@ -7,6 +7,5 @@ async def set_admin_commands():
         commands=[
             BotCommand(command="start", description="Start"),
             BotCommand(command="registration", description="register"),
-        ]
-       
+        ] 
     )
