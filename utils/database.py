@@ -49,11 +49,7 @@ class Database:
 
     async def find_user(self, chat_id: int) -> bool:
         sql = f"SELECT 1 FROM {self.db_name} WHERE chat_id = $1 LIMIT 1;"
-
-        if not self.db_name.isidentifier():
-            raise ValueError("Invalid database name")
-
-        result = await self.execute(sql, fetch=True, params=(chat_id,))
+        result = await self.execute(sql, chat_id, fetch=True)
         return bool(result)
 
     async def add_product(

@@ -5,7 +5,6 @@ from loader import dp, bot
 
 db = Database("vakant")
 
-
 async def start():
     await db.create()
 
