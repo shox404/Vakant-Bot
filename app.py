@@ -1,9 +1,11 @@
 import asyncio
 import handlers
-from utils.database import Database
+from utils.database import Database, connect
 from loader import dp, bot
 
-db = Database()
+connection = connect()
+db = Database(connection)
+
 
 async def start():
     try:
