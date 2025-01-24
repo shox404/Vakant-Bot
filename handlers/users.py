@@ -1,32 +1,46 @@
-from aiogram import Bot, Dispatcher, types
-from aiogram.types import ParseMode
-from aiogram.contrib.middlewares.logging import LoggingMiddleware
-from aiogram.utils import executor
-from aiogram.dispatcher import FSMContext
-from aiogram.dispatcher.filters.state import State, StatesGroup
-from aiogram.dispatcher.filters import Text
-from aiogram.contrib.fsm_storage.memory import MemoryStorage
+from aiogram import types
+from aiogram.dispatcher.filters.builtin import Command
+from aiogram.dispatcher import FSMContext 
 from states.users import User
-dp = Dispatcher
+from loader import dp
 
-@dp.message_handler(commands='registration')
-async def get_name(message: types.Message):
-    await message.answer("Please enter your name:")
+@dp.message_handler(Command('registration'))
+async def get_user_name(message: types.Message):
+    text = f"Please enter your name: "
     await User.name.set()
+    await message.answer(text)  
 
-@dp.message_handler(state=User.surname)
-async def process_age(message: types.Message, state: FSMContext):
-     await message.answer("Well! Now please enter your surname: ")
+@dp.message_handler(state=User.surname)   
+async def get_user_surname(message: types.Message,state:FSMContext):
+    text = f"Well! Now please enter your surname"
+    await state.update_data(
+        {"Name" : message.text}
+        )   
+    await User.surname.set()
+    await message.answer(text)       
 
-@dp.message_handler(state=User.name)
-async def process_name(message: types.Message, state: FSMContext):
-    await message.answer("Got it! Now, how old are you?")
+@dp.message_handler(state=User.age)   
+async def get_user_age(message: types.Message,state:FSMContext):
+    text = f"Got it! FInally enter your age: "
+    await state.update_data(
+        {"Surname" : message.text}
+        )   
     await User.age.set()
+    await message.answer(text)
 
-@dp.message_handler(state=User.age)
-async def process_age(message: types.Message, state: FSMContext):
-    await message.answer(f"")
+
+@dp.message_handler(state=User.age)   
+async def ovqat_func(message: types.Message,state:FSMContext):
+    await state.update_data(
+        {"Age" : message.text}
+        )   
+    text = f"Data has been added succesfully"
+    data = await state.get_data()
+    name = data.get('name')
+    surname = data.get('surname')
+    age = data.get('age')
+    text1 = f"This is your personal data \n"\
+           f"Name: {name},\n Surname: {surname},\nAge:{age}" 
     await state.finish()
-
-if __name__ == '__main__':
-    executor.start_polling(dp, skip_updates=True)
+    await message.answer(text)
+    await message.answer(text1)
