@@ -47,9 +47,14 @@ class Database:
         )
         return sql, tuple(parameters.values())
 
-    async def get_products(self):
-        sql = f"SELECT * FROM {self.db_name};"
-        return await self.execute(sql, fetch=True)
+    async def find_user(self, chat_id: int) -> bool:
+        sql = f"SELECT 1 FROM {self.db_name} WHERE chat_id = $1 LIMIT 1;"
+
+        if not self.db_name.isidentifier():
+            raise ValueError("Invalid database name")
+
+        result = await self.execute(sql, fetch=True, params=(chat_id,))
+        return bool(result)
 
     async def add_product(
         self, name, description, address, price, summary, product_count

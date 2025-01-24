@@ -3,7 +3,7 @@ from aiogram.types import Message
 from aiogram.filters import CommandStart
 from datetime import datetime
 from data.config import ADMINS
-
+from app import db
 
 start_router = Router()
 
@@ -29,6 +29,8 @@ async def start(message: Message):
                 f"Good evening. Welcome to the bot ADMIN <b>{message.from_user.full_name}</b>! "
             )
     else:
+        user = await db.find_user(user_id)
+        print("hi",user)
 
         await message.answer(
             f"Hello, Welcome to the bot <b>{message.from_user.full_name}</b>!"
