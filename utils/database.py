@@ -12,10 +12,10 @@ class Database:
 
     async def create(self):
         self.pool = await asyncpg.create_pool(
-            user=config.DB_NAME,
-            password=config.DB_PASSWORD,
-            host=config.DB_HOST,
-            database=config.DB_DATABASE,
+            user="postgres",
+            password="4048080404",
+            host="localhost",
+            database="vakant",
         )
 
     async def execute(
@@ -49,11 +49,7 @@ class Database:
 
     async def find_user(self, chat_id: int) -> bool:
         sql = f"SELECT 1 FROM {self.db_name} WHERE chat_id = $1 LIMIT 1;"
-
-        if not self.db_name.isidentifier():
-            raise ValueError("Invalid database name")
-
-        result = await self.execute(sql, fetch=True, params=(chat_id,))
+        result = await self.execute(sql, chat_id, fetch=True)
         return bool(result)
 
     async def add_product(
