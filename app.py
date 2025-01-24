@@ -3,11 +3,9 @@ import handlers
 from utils.database import Database
 from loader import dp, bot
 
-db = Database("vakant")
+db = Database()
 
 async def start():
-    await db.create()
-
     try:
         await dp.start_polling(bot)
     finally:

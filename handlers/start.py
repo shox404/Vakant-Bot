@@ -30,7 +30,7 @@ async def start(message: Message):
             )
     else:
         user = await db.find_user(user_id)
-        print("hi",user)
+        print("hi", user)
 
         await message.answer(
             f"Hello, Welcome to the bot <b>{message.from_user.full_name}</b>!"
