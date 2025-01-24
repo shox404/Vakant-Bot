@@ -7,3 +7,4 @@ def cancel_keyboard(method: str):
             [InlineKeyboardButton(text="Cancel", callback_data=f"cancel_{method}")]
         ]
     )
+
