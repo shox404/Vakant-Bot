@@ -4,7 +4,7 @@ from loader import dp
 from general import general  # Ensure this imports a valid structure
 
 # Sample data for generals (list of dictionaries with topics and IDs)
-generals = general
+generals = general,[]
 
 @dp.message_handler(commands=["vakansy"])  # Example handler
 async def send_vacancy_list(message: types.Message):
