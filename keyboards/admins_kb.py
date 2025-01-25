@@ -1,4 +1,5 @@
 from aiogram import types
+from aiogram.utils import executor
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 from loader import dp
 
@@ -24,3 +25,6 @@ async def process_admin_decision(callback_query: types.CallbackQuery):
         # Здесь можно отправить сообщение пользователю об отказе
 
     await callback_query.answer()  # Уведомление, что callback обработан
+
+if __name__ == "__main__":
+    executor.start_polling(dp, skip_updates=True)    

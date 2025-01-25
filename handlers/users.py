@@ -1,4 +1,5 @@
 from aiogram import types
+from aiogram.utils import executor
 from aiogram.filters import Command
 from aiogram.dispatcher import FSMContext
 from keyboards.admins_kb import get_approval_keyboard
@@ -51,3 +52,6 @@ async def send_vacancy_to_admin(message: types.Message, state: FSMContext):
         # Подтверждение пользователю
     await message.answer("Your data has been sent to the admin for approval. Please wait.")
     await state.finish()
+
+if __name__ == "__main__":
+    executor.start_polling(dp, skip_updates=True)   

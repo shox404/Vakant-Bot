@@ -1,7 +1,8 @@
-from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 from aiogram import types
-from loader import dp
+from aiogram.utils import executor
+from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 from general import chat  # Ensure this imports a valid structure
+from loader import dp
 
 # Sample data for generals (list of dictionaries with topics and IDs)
 chats = chat
@@ -21,3 +22,7 @@ async def send_vacancy_list(message: types.Message):
 
     # Send the message with the inline keyboard
     await message.answer(text=start_text, reply_markup=keyboard)
+
+
+if __name__ == "__main__":
+    executor.start_polling(dp, skip_updates=True)

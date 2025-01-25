@@ -1,9 +1,11 @@
 from aiogram import Router, types
+from aiogram.utils import executor
 from aiogram.types import Message
 from aiogram.filters import CommandStart
 from datetime import datetime
 from data.config import ADMINS  # Список админов из конфигурации
 from app import db  # Подключение к базе данных (убедитесь, что это работает)
+from loader import dp
 
 start_router = Router()
 
@@ -36,3 +38,6 @@ async def start(message: Message):
         await message.answer(
             f"Hello, Welcome to the bot <b>{message.from_user.full_name}</b>!"
         )
+
+if __name__ == "__main__":
+    executor.start_polling(dp, skip_updates=True)   
