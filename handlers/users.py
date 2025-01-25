@@ -1,6 +1,7 @@
 from aiogram import types
 from aiogram.filters import Command
 from aiogram.dispatcher import FSMContext
+from keyboards.admins_kb import get_approval_keyboard
 from data.config import ADMINS
 from states.users import User  # Убедитесь, что User — это ваш StateGroup
 from loader import dp
