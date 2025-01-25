@@ -1,8 +1,7 @@
-from aiogram import types
-from aiogram.utils import executor
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
-from general import chat  # Ensure this imports a valid structure
+from aiogram import types
 from loader import dp
+from general import chat  # Ensure this imports a valid structure
 
 # Sample data for generals (list of dictionaries with topics and IDs)
 chats = chat
