@@ -1,5 +1,6 @@
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 from aiogram import types
+from aiogram.utils import executor
 from loader import dp
 from general import chat  # Ensure this imports a valid structure
 
