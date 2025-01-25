@@ -1,4 +1,5 @@
 from aiogram import types
+from aiogram.utils import executor
 from aiogram.filters import Command
 from aiogram.dispatcher import FSMContext
 from states.users import User
@@ -36,10 +37,10 @@ async def get_personal_data(message: types.Message, state: FSMContext):
     name = data.get("name")
     surname = data.get("surname")
     age = data.get("age")
-    text1 = (
+    data = (
         f"This is your personal data \n"
         f"Name: {name},\n Surname: {surname},\nAge:{age}"
     )
-    await state.finish()
     await message.answer(text)
-    await message.answer(text1)
+    await message.answer(data)
+    await state.finish()
