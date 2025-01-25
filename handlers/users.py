@@ -1,57 +1,47 @@
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 from aiogram import types
-from aiogram.dispatcher import FSMContext
-from aiogram.dispatcher.filters import Command
+from aiogram.filters import Command
+from aiogram.dispatcher import FSMContext 
+from states.users import User
 from loader import dp
-from general import generals  
-from states import User 
 
+@dp.message_handler(Command('registration'))
+async def get_user_name(message: types.Message):
+    text = f"Please enter your name: "
+    await User.name.set()
+    await message.answer(text)  
 
-
-
-
-@dp.callback_query_handler(lambda call: call.data.startswith("general_"))
-async def handle_vacancy_selection(call: types.CallbackQuery, state: FSMContext):
-    vacancy_id = call.data.split("_")[1]
-    selected_vacancy = next((item for item in generals if item["id"] == vacancy_id), None)
-    if selected_vacancy:
-        await state.update_data(selected_vacancy=selected_vacancy["topic"])
-        await call.message.answer(f"Вы выбрали: {selected_vacancy['topic']}\nТеперь пройдите регистрацию.")
-        await User.name.set()  # Proceed to the name collection step
-    await call.answer()
-
-
-@dp.message_handler(state=User.name)
-async def get_user_name(message: types.Message, state: FSMContext):
-    await state.update_data(name=message.text)
-    await message.answer("Отлично! Теперь введите вашу фамилию:")
+@dp.message_handler(state=User.surname)   
+async def get_user_surname(message: types.Message,state:FSMContext):
+    text = f"Well! Now please enter your surname"
+    await state.update_data(
+        {"Name" : message.text}
+        )   
     await User.surname.set()
+    await message.answer(text)       
 
-
-@dp.message_handler(state=User.surname)
-async def get_user_surname(message: types.Message, state: FSMContext):
-    await state.update_data(surname=message.text)
-    await message.answer("Хорошо! Теперь укажите ваш возраст:")
+@dp.message_handler(state=User.age)   
+async def get_user_age(message: types.Message,state:FSMContext):
+    text = f"Got it! FInally enter your age: "
+    await state.update_data(
+        {"Surname" : message.text}
+        )   
     await User.age.set()
+    await message.answer(text)
 
 
-@dp.message_handler(state=User.age)
-async def get_user_age(message: types.Message, state: FSMContext):
-    await state.update_data(age=message.text)
+@dp.message_handler(state=User.age)   
+async def get_personal_data(message: types.Message,state:FSMContext):
+    await state.update_data(
+        {"Age" : message.text}
+        )   
+    text = f"Data has been added succesfully"
     data = await state.get_data()
-    name = data.get("name")
-    surname = data.get("surname")
-    age = data.get("age")
-    selected_vacancy = data.get("selected_vacancy")
-
-
-    text = (
-        f"Регистрация завершена!\n\n"
-        f"Ваши данные:\n"
-        f"Имя: {name}\n"
-        f"Фамилия: {surname}\n"
-        f"Возраст: {age}\n"
-        f"Выбранная вакансия: {selected_vacancy}"
-    )
+    name = data.get('name')
+    surname = data.get('surname')
+    age = data.get('age')
+    text1 = f"This is your personal data \n"\
+           f"Name: {name},\n Surname: {surname},\nAge:{age}" 
     await state.finish()
     await message.answer(text)
+    await message.answer(text1)
