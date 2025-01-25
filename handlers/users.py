@@ -5,10 +5,11 @@ from aiogram.dispatcher.filters import Command
 from loader import dp
 from general import generals  
 from states import User 
-from keyboards.general_kb
 
 
-# Step 2: Handle vacancy selection
+
+
+
 @dp.callback_query_handler(lambda call: call.data.startswith("general_"))
 async def handle_vacancy_selection(call: types.CallbackQuery, state: FSMContext):
     vacancy_id = call.data.split("_")[1]
@@ -19,21 +20,21 @@ async def handle_vacancy_selection(call: types.CallbackQuery, state: FSMContext)
         await User.name.set()  # Proceed to the name collection step
     await call.answer()
 
-# Step 3: Get user name
+
 @dp.message_handler(state=User.name)
 async def get_user_name(message: types.Message, state: FSMContext):
     await state.update_data(name=message.text)
     await message.answer("Отлично! Теперь введите вашу фамилию:")
     await User.surname.set()
 
-# Step 4: Get user surname
+
 @dp.message_handler(state=User.surname)
 async def get_user_surname(message: types.Message, state: FSMContext):
     await state.update_data(surname=message.text)
     await message.answer("Хорошо! Теперь укажите ваш возраст:")
     await User.age.set()
 
-# Step 5: Get user age
+
 @dp.message_handler(state=User.age)
 async def get_user_age(message: types.Message, state: FSMContext):
     await state.update_data(age=message.text)
@@ -43,7 +44,7 @@ async def get_user_age(message: types.Message, state: FSMContext):
     age = data.get("age")
     selected_vacancy = data.get("selected_vacancy")
 
-    # Display the collected data
+
     text = (
         f"Регистрация завершена!\n\n"
         f"Ваши данные:\n"
