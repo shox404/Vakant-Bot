@@ -4,3 +4,4 @@ class User(StatesGroup):
     name = State()
     surname = State()
     age = State()
+    vacancy = State()

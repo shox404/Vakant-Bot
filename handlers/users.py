@@ -1,6 +1,7 @@
 from aiogram import types
 from aiogram.filters import Command
 from aiogram.dispatcher import FSMContext
+from data.config import ADMINS
 from states.users import User  # Убедитесь, что User — это ваш StateGroup
 from loader import dp
 
@@ -26,23 +27,26 @@ async def get_user_age(message: types.Message, state: FSMContext):
     await User.age.set()  # Устанавливаем следующее состояние
     await message.answer(text)
 
-@dp.message_handler(state=User.age)
-async def get_personal_data(message: types.Message, state: FSMContext):
-    age = message.text
+@dp.message_handler(state=User.vacancy)
+async def send_vacancy_to_admin(message: types.Message, state: FSMContext):
+    vacancy = message.text
+    await state.update_data(vacancy=vacancy)
     await state.update_data(age=age)  # Сохраняем возраст в состоянии
     data = await state.get_data()  # Получаем все данные из состояния
-
     name = data.get('name')
     surname = data.get('surname')
     age = data.get('age')
 
     # Сообщение с персональными данными
-    text = (
+    admin_message = (
         "Your personal data has been saved successfully!\n\n"
         f"Name: {name}\n"
         f"Surname: {surname}\n"
         f"Age: {age}"
     )
 
-    await state.finish()  # Завершаем состояние
-    await message.answer(text)
+    for admin_id in ADMINS:
+            await dp.bot.send_message(admin_id, admin_message, reply_markup=get_approval_keyboard())
+        # Подтверждение пользователю
+    await message.answer("Your data has been sent to the admin for approval. Please wait.")
+    await state.finish()
