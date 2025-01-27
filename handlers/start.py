@@ -1,8 +1,8 @@
-from aiogram import Router, types
+from aiogram import Router
 from aiogram.types import Message
 from aiogram.filters import CommandStart
 from datetime import datetime
-from data.config import ADMINS  # Список админов из конфигурации
+from data.config import ADMINS
 from utils.database import find_user, add_user
 
 start_router = Router()
@@ -28,11 +28,11 @@ async def start(message: Message):
         )
     else:
         user = await find_user(user_id)  # Проверка пользователя в базе данных
-    
+
         if not user:
             # Если пользователь новый, можно добавить в базу данных
             await add_user(user_id, "shox", "", 16)
-            
+
         await message.answer(
             f"Hello, Welcome to the bot <b>{message.from_user.full_name}</b>!"
         )
