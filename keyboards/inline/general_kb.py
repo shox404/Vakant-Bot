@@ -1,28 +1,16 @@
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
-from aiogram import types
-from aiogram.utils import executor
-from loader import dp
-from general import chat  # Ensure this imports a valid structure
+from general import chats  # Ensure this imports a valid structure
 
-# Sample data for generals (list of dictionaries with topics and IDs)
-chats = chat
-@dp.message_handler(commands=["vakansy"])  # Example handler for the "/vakansy" command
-async def send_vacancy_list(message: types.Message):
-    # Start text
-    start_text = "Список вакансий:"
-    # Create the inline keyboard
-    keyboard = InlineKeyboardMarkup(row_width=1)
-    for chat in chats:
-        keyboard.add(
+
+async def send_vacancy_list():
+    inline_keyboard = [
+        [
             InlineKeyboardButton(
                 text=chat.get("topic", "Без названия"),  # Button text
-                callback_data=f"chat_{chat['id']}",  # Callback data
+                callback_data=f"general_{chat['id']}",  # Callback data
             )
-        )
+        ]
+        for chat in chats
+    ]
 
-    # Send the message with the inline keyboard
-    await message.answer(text=start_text, reply_markup=keyboard)
-
-
-if __name__ == "__main__":
-    executor.start_polling(dp, skip_updates=True)
+    return InlineKeyboardMarkup(inline_keyboard=inline_keyboard)
