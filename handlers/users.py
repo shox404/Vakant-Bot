@@ -3,6 +3,7 @@ from aiogram.types import Message
 from aiogram.filters import Command
 from aiogram.fsm.context import FSMContext
 from states.users import User
+from utils.database import find_user, add_user
 
 profile_router = Router()
 
@@ -10,7 +11,14 @@ profile_router = Router()
 @profile_router.message(Command("profile"))
 async def get_user_name(message: Message, state: FSMContext):
     text = "Please enter your name:"
-    
+    user_id = message.from_user.id
+    user = await find_user(user_id)
+
+    if user:
+        await message.answer("Your data")
+    else:
+        await state.set_state(User.name)
+        await message.answer(text)
 
 
 @profile_router.message(User.name)
@@ -41,6 +49,7 @@ async def get_personal_data(message: Message, state: FSMContext):
         f"This is your personal data \n"
         f"Name: {name},\nSurname: {surname},\nAge: {age}"
     )
+    await add_user(user_id=message.from_user.id, name=name, surname=surname, age=int(age))
     await message.answer(text)
     await message.answer(data)
     await state.clear()
