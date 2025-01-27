@@ -29,16 +29,7 @@ async def start(message: Message):
             f"{greeting}. Welcome to the bot, ADMIN <b>{message.from_user.full_name}</b>!"
         )
     else:
-<<<<<<< HEAD
-        user = await find_user(user_id)
-
-        if not user:
-           
-            await add_user(user_id, "shox", "", 16)
-
-=======
         await set_commands(message.bot)
->>>>>>> 36c99b18dcca83a1e48f12dbfbe7ee54fe308e9c
         await message.answer(
             f"Hello, Welcome to the bot <b>{message.from_user.full_name}</b>!"
         )
