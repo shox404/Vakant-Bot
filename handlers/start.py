@@ -11,10 +11,9 @@ start_router = Router()
 @start_router.message(CommandStart())
 async def start(message: Message):
 
-    current_time = datetime.now()  # Текущее время
-    user_id = message.from_user.id  # Преобразование ID в строку для сравнения с ADMINS
+    current_time = datetime.now()
+    user_id = message.from_user.id 
 
-    # Приветствие для админов
     if user_id in ADMINS:
         if current_time.hour < 12:
             greeting = "Good morning"
@@ -27,10 +26,10 @@ async def start(message: Message):
             f"{greeting}. Welcome to the bot, ADMIN <b>{message.from_user.full_name}</b>!"
         )
     else:
-        user = await find_user(user_id)  # Проверка пользователя в базе данных
+        user = await find_user(user_id)
 
         if not user:
-            # Если пользователь новый, можно добавить в базу данных
+           
             await add_user(user_id, "shox", "", 16)
 
         await message.answer(
