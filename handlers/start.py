@@ -15,7 +15,7 @@ async def start(message: Message):
     current_time = datetime.now()
     user_id = message.from_user.id 
 
-    if user_id in ADMINS:
+    if str(user_id) in ADMINS:
         await set_admin_commands(message.bot)
 
         if current_time.hour < 12:

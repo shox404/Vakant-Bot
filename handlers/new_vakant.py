@@ -5,7 +5,8 @@ from aiogram.fsm.state import State, StatesGroup
 from aiogram.filters.command import Command
 from keyboards.inline.general_kb import send_vacancy_list
 from general import chats
-from data.config import ADMINS
+from data.config import ADMINS, SUPERGROUP_CHAT_ID
+from utils.database import find_user
 
 new_vakant = Router()
 
@@ -33,6 +34,7 @@ async def handle_vacancy_selection(callback: CallbackQuery, state: FSMContext):
     selected_vacancy = next((item for item in chats if item["id"] == vacancy_id), None)
     if selected_vacancy:
         await state.update_data(selected_vacancy=selected_vacancy["topic"])
+        await state.update_data(vacancy_id=vacancy_id)
         await callback.answer(f"You selected: {selected_vacancy['topic']}")
         await callback.message.answer("Enter job name.")
         await state.set_state(User.job_name)  # Set state for job_name
@@ -78,9 +80,13 @@ async def get_experience(message: Message, state: FSMContext):
 async def get_salary(message: Message, state: FSMContext):
     await state.update_data(salary=message.text)
     data = await state.get_data()
+    user = await find_user(message.from_user.id)
     text = (
         f"Registration Completed!\n\n"
         f"Your Details:\n"
+        f"Name: {user.get('name')}\n"
+        f"Surname: {user.get('surname')}\n"
+        f"Age: {user.get('age')}\n"
         f"Selected Vacancy: {data.get('selected_vacancy')}\n"
         f"Job Name: {data.get('job_name')}\n"
         f"Location: {data.get('location')}\n"
@@ -89,7 +95,14 @@ async def get_salary(message: Message, state: FSMContext):
         f"Education and Experience: {data.get('experience')}\n"
         f"Salary: {data.get('salary')}"
     )
-    for admin in ADMINS:
-        await message.bot.send_message(chat_id=admin, text=text)
-    await message.answer(text)
-    await state.clear()
+
+    if str(message.from_user.id) in ADMINS:
+        await message.bot.send_message(
+            chat_id=SUPERGROUP_CHAT_ID, text=text, message_thread_id=data["vacancy_id"]
+        )
+    else:
+        for admin in list(ADMINS):
+            await message.bot.send_message(chat_id=admin, text=text)
+
+        await message.answer(text)
+        await state.clear()
