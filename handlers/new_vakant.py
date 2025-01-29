@@ -82,8 +82,6 @@ async def get_salary(message: Message, state: FSMContext):
     data = await state.get_data()
     user = await find_user(message.from_user.id)
     text = (
-        f"Registration Completed!\n\n"
-        f"Your Details:\n"
         f"Name: {user.get('name')}\n"
         f"Surname: {user.get('surname')}\n"
         f"Age: {user.get('age')}\n"
@@ -95,13 +93,16 @@ async def get_salary(message: Message, state: FSMContext):
         f"Education and Experience: {data.get('experience')}\n"
         f"Salary: {data.get('salary')}"
     )
-
+    print(str(message.from_user.id))
+    print(ADMINS)
     if str(message.from_user.id) in ADMINS:
+        print("admin")
         await message.bot.send_message(
             chat_id=SUPERGROUP_CHAT_ID, text=text, message_thread_id=data["vacancy_id"]
         )
     else:
-        for admin in list(ADMINS):
+        print("user")
+        for admin in ADMINS:
             await message.bot.send_message(chat_id=admin, text=text)
 
         await message.answer(text)
