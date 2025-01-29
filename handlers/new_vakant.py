@@ -75,7 +75,7 @@ async def get_experience(message: Message, state: FSMContext):
     await message.answer("Enter the Salary:")
     await state.set_state(User.salary)  # Set state for salary
 
-
+                                              
 @new_vakant.message(User.salary)
 async def get_salary(message: Message, state: FSMContext):
     await state.update_data(salary=message.text)
